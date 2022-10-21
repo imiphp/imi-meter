@@ -3,7 +3,7 @@
 [![Latest Version](https://img.shields.io/packagist/v/imiphp/imi-meter.svg)](https://packagist.org/packages/imiphp/imi-meter)
 [![Php Version](https://img.shields.io/badge/php-%3E=7.4-brightgreen.svg)](https://secure.php.net/)
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.8.0-brightgreen.svg)](https://github.com/swoole/swoole-src)
-[![imi License](https://img.shields.io/badge/license-MulanPSL%202.0-brightgreen.svg)](https://github.com/imiphp/imi-meter/blob/master/LICENSE)
+[![imi License](https://img.shields.io/badge/license-MulanPSL%202.0-brightgreen.svg)](https://github.com/imiphp/imi-meter/blob/2.1/LICENSE)
 
 ## 介绍
 
