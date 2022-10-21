@@ -64,7 +64,7 @@ class SummaryAspect
             $value = $summaryAnnotation->value;
         }
 
-        MeterRegistry::getDriverInstance()->summary($summaryAnnotation->name, $labels, $summaryAnnotation->description, $summaryAnnotation->quantiles, $summaryAnnotation->options)->record($value);
+        MeterRegistry::getDriverInstance()->summary($summaryAnnotation->name, $labels, $summaryAnnotation->description, $summaryAnnotation->percentile, $summaryAnnotation->options)->record($value);
 
         return $returnValue;
     }

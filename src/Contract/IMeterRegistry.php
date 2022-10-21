@@ -31,7 +31,7 @@ interface IMeterRegistry
 
     public function histogram(string $name, array $tags = [], string $description = '', ?array $buckets = null, array $options = []): IHistogram;
 
-    public function summary(string $name, array $tags = [], string $description = '', ?array $quantiles = [], array $options = []): ISummary;
+    public function summary(string $name, array $tags = [], string $description = '', ?array $percentile = [], array $options = []): ISummary;
 
     public function getMeters(): array;
 

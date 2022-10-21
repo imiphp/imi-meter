@@ -17,14 +17,14 @@ class Summary implements ISummary
 
     protected int $count = 0;
 
-    protected ?array $quantiles = null;
+    protected ?array $percentile = null;
 
-    public function __construct(string $name, array $tags = [], string $description = '', ?array $quantiles = null, array $options = [], ?IMeterRegistry $meterRegistry = null)
+    public function __construct(string $name, array $tags = [], string $description = '', ?array $percentile = null, array $options = [], ?IMeterRegistry $meterRegistry = null)
     {
         $this->name = $name;
         $this->tags = $tags;
         $this->description = $description;
-        $this->quantiles = $quantiles;
+        $this->percentile = $percentile;
         $this->options = $options;
         $this->meterRegistry = $meterRegistry;
     }
@@ -56,8 +56,8 @@ class Summary implements ISummary
         return 0 === $count ? 0 : ($this->totalAmount() / $count);
     }
 
-    public function getQuantiles(): ?array
+    public function getPercentile(): ?array
     {
-        return $this->quantiles;
+        return $this->percentile;
     }
 }

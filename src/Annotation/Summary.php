@@ -14,7 +14,7 @@ use Imi\Meter\Enum\TimeUnit;
  * @property string       $name
  * @property array        $tags
  * @property string       $description
- * @property array|null   $quantiles
+ * @property array|null   $percentile
  * @property int          $baseTimeUnit
  * @property string|float $value
  * @property array        $options
@@ -23,10 +23,10 @@ use Imi\Meter\Enum\TimeUnit;
 class Summary extends Base
 {
     /**
-     * @param float[]      $quantiles
+     * @param float[]      $percentile
      * @param string|float $value
      */
-    public function __construct(?array $__data = null, string $name = '', array $tags = [], string $description = '', ?array $quantiles = [], int $baseTimeUnit = TimeUnit::NANO_SECOND, $value = '{returnValue}', array $options = [])
+    public function __construct(?array $__data = null, string $name = '', array $tags = [], string $description = '', ?array $percentile = [], int $baseTimeUnit = TimeUnit::NANO_SECOND, $value = '{returnValue}', array $options = [])
     {
         parent::__construct(...\func_get_args());
     }

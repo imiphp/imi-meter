@@ -14,5 +14,5 @@ interface ISummary extends IMeter
 
     public function mean(): float;
 
-    public function getQuantiles(): ?array;
+    public function getPercentile(): ?array;
 }

@@ -47,10 +47,10 @@ abstract class BaseMeterRegistry implements IMeterRegistry
         return $this->meters[$this->generateKey(static::HISTOGRAM_CLASS, $name, $tags)] ??= App::newInstance(static::HISTOGRAM_CLASS, $name, $tags, $description, $buckets, $options, $this);
     }
 
-    public function summary(string $name, array $tags = [], string $description = '', ?array $quantiles = [], array $options = []): ISummary
+    public function summary(string $name, array $tags = [], string $description = '', ?array $percentile = [], array $options = []): ISummary
     {
         // @phpstan-ignore-next-line
-        return $this->meters[$this->generateKey(static::SUMMARY_CLASS, $name, $tags)] ??= App::newInstance(static::SUMMARY_CLASS, $name, $tags, $description, $quantiles, $options, $this);
+        return $this->meters[$this->generateKey(static::SUMMARY_CLASS, $name, $tags)] ??= App::newInstance(static::SUMMARY_CLASS, $name, $tags, $description, $percentile, $options, $this);
     }
 
     public function getMeters(): array
