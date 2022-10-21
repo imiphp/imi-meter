@@ -4,7 +4,6 @@ volumes:
 services:
   swoole:
     container_name: "swoole"
-    environment:
     build:
       context: .
       dockerfile: swoole.dockerfile
