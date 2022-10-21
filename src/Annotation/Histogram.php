@@ -23,10 +23,10 @@ use Imi\Meter\Enum\TimeUnit;
 class Histogram extends Base
 {
     /**
-     * @param float[]      $buckets
+     * @param float[]|null $buckets
      * @param string|float $value
      */
-    public function __construct(?array $__data = null, string $name = '', array $tags = [], string $description = '', ?array $buckets = [], int $baseTimeUnit = TimeUnit::NANO_SECOND, $value = '{returnValue}', array $options = [])
+    public function __construct(?array $__data = null, string $name = '', array $tags = [], string $description = '', ?array $buckets = null, int $baseTimeUnit = TimeUnit::NANO_SECOND, $value = '{returnValue}', array $options = [])
     {
         parent::__construct(...\func_get_args());
     }

@@ -41,7 +41,7 @@ abstract class BaseMeterRegistry implements IMeterRegistry
         return $this->meters[$this->generateKey(static::TIMER_CLASS, $name, $tags)] ??= App::newInstance(static::TIMER_CLASS, $name, $tags, $description, $baseTimeUnit, $options, $this);
     }
 
-    public function histogram(string $name, array $tags = [], string $description = '', ?array $buckets = [], array $options = []): IHistogram
+    public function histogram(string $name, array $tags = [], string $description = '', ?array $buckets = null, array $options = []): IHistogram
     {
         // @phpstan-ignore-next-line
         return $this->meters[$this->generateKey(static::HISTOGRAM_CLASS, $name, $tags)] ??= App::newInstance(static::HISTOGRAM_CLASS, $name, $tags, $description, $buckets, $options, $this);

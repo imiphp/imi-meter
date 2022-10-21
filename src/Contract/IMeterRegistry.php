@@ -29,7 +29,7 @@ interface IMeterRegistry
 
     public function timer(string $name, array $tags = [], string $description = '', int $baseTimeUnit = TimeUnit::NANO_SECOND, array $options = []): ITimer;
 
-    public function histogram(string $name, array $tags = [], string $description = '', ?array $buckets = [], array $options = []): IHistogram;
+    public function histogram(string $name, array $tags = [], string $description = '', ?array $buckets = null, array $options = []): IHistogram;
 
     public function summary(string $name, array $tags = [], string $description = '', ?array $quantiles = [], array $options = []): ISummary;
 
