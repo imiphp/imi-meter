@@ -28,7 +28,9 @@
     "scripts": {
         "test": "@php vendor/bin/phpunit -c ./phpunit.xml"
     },
-    "suggest": {},
+    "suggest": {
+        "imiphp/imi-prometheus": "*"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
