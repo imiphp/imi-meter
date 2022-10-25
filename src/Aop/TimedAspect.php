@@ -16,6 +16,7 @@ use Imi\Meter\Contract\ITimerSample;
 use Imi\Meter\Facade\MeterRegistry;
 use Imi\Util\ObjectArrayHelper;
 use Imi\Util\Text;
+use Imi\Worker;
 
 /**
  * @Aspect
@@ -76,6 +77,14 @@ class TimedAspect
             if (!Text::isEmpty($exceptionTag = $options['exceptionTag'] ?? 'exception') && !isset($labels[$exceptionTag]))
             {
                 $labels[$exceptionTag] = isset($th) ? \get_class($th) : ($options['defaultExceptionTagValue'] ?? 'none');
+            }
+            if (!Text::isEmpty($instanceTag = $options['instanceTag'] ?? 'instance') && !isset($labels[$instanceTag]))
+            {
+                $labels[$instanceTag] = $options['instance'] ?? 'imi';
+            }
+            if (!Text::isEmpty($workerTag = $options['workerTag'] ?? 'worker') && !isset($labels[$workerTag]))
+            {
+                $labels[$workerTag] = (string) Worker::getWorkerId();
             }
 
             $timer = MeterRegistry::getDriverInstance()->timer($timedAnnotation->name, $labels, $timedAnnotation->description, $timedAnnotation->baseTimeUnit, $timedAnnotation->options);

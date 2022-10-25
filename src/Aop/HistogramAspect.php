@@ -14,6 +14,8 @@ use Imi\Bean\BeanFactory;
 use Imi\Meter\Annotation\Histogram;
 use Imi\Meter\Facade\MeterRegistry;
 use Imi\Util\ObjectArrayHelper;
+use Imi\Util\Text;
+use Imi\Worker;
 
 /**
  * @Aspect
@@ -51,6 +53,14 @@ class HistogramAspect
             {
                 $value = preg_replace_callback('/\{([^\}]+)\}/', static fn (array $matches): string => (string) ObjectArrayHelper::get($context, $matches[1]), $value);
             }
+        }
+        if (!Text::isEmpty($instanceTag = $options['instanceTag'] ?? 'instance') && !isset($labels[$instanceTag]))
+        {
+            $labels[$instanceTag] = $options['instance'] ?? 'imi';
+        }
+        if (!Text::isEmpty($workerTag = $options['workerTag'] ?? 'worker') && !isset($labels[$workerTag]))
+        {
+            $labels[$workerTag] = (string) Worker::getWorkerId();
         }
 
         unset($value);

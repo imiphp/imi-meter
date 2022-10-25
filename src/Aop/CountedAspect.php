@@ -15,28 +15,13 @@ use Imi\Meter\Annotation\Counted;
 use Imi\Meter\Facade\MeterRegistry;
 use Imi\Util\ObjectArrayHelper;
 use Imi\Util\Text;
+use Imi\Worker;
 
 /**
  * @Aspect
  */
 class CountedAspect
 {
-    // public final String DEFAULT_EXCEPTION_TAG_VALUE = "none";
-
-    // public final String RESULT_TAG_FAILURE_VALUE = "failure";
-
-    // public final String RESULT_TAG_SUCCESS_VALUE = "success";
-
-    // /**
-    //  * The tag name to encapsulate the method execution status.
-    //  */
-    // private static final String RESULT_TAG = "result";
-
-    // /**
-    //  * The tag name to encapsulate the exception thrown by the intercepted method.
-    //  */
-    // private static final String EXCEPTION_TAG = "exception";
-
     /**
      * @PointCut(
      *         type=PointCutType::ANNOTATION,
@@ -89,6 +74,14 @@ class CountedAspect
                 if (!Text::isEmpty($exceptionTag = $options['exceptionTag'] ?? 'exception') && !isset($labels[$exceptionTag]))
                 {
                     $labels[$exceptionTag] = isset($th) ? \get_class($th) : ($options['defaultExceptionTagValue'] ?? 'none');
+                }
+                if (!Text::isEmpty($instanceTag = $options['instanceTag'] ?? 'instance') && !isset($labels[$instanceTag]))
+                {
+                    $labels[$instanceTag] = $options['instance'] ?? 'imi';
+                }
+                if (!Text::isEmpty($workerTag = $options['workerTag'] ?? 'worker') && !isset($labels[$workerTag]))
+                {
+                    $labels[$workerTag] = (string) Worker::getWorkerId();
                 }
 
                 MeterRegistry::getDriverInstance()->counter($countedAnnotation->name, $labels, $countedAnnotation->description)->increment();
