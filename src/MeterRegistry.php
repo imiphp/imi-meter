@@ -38,21 +38,21 @@ class MeterRegistry
 
     public function getDriverInstance(): IMeterRegistry
     {
-        if (!$this->driverInstance)
+        $context = RequestContext::getContext();
+        if (isset($context[self::CONTEXT_KEY]))
         {
-            if ('' === $this->driver)
-            {
-                throw new \InvalidArgumentException('Config @app.beans.MeterRegistry.driver cannot be empty');
-            }
-            // @phpstan-ignore-next-line
-            /** @var IMeterRegistry $instance */
-            $instance = $this->driverInstance = App::newInstance($this->driver, $this->options);
-            RequestContext::set(self::CONTEXT_KEY, $instance);
-
-            return $instance;
+            return $context[self::CONTEXT_KEY];
         }
+        if ('' === $this->driver)
+        {
+            throw new \InvalidArgumentException('Config @app.beans.MeterRegistry.driver cannot be empty');
+        }
+        // @phpstan-ignore-next-line
+        /** @var IMeterRegistry $instance */
+        $instance = App::newInstance($this->driver, $this->options);
+        RequestContext::set(self::CONTEXT_KEY, $instance);
 
-        return $this->driverInstance;
+        return $instance;
     }
 
     protected function onContextDestroy(): void
