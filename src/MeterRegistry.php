@@ -6,18 +6,25 @@ namespace Imi\Meter;
 
 use Imi\App;
 use Imi\Bean\Annotation\Bean;
+use Imi\Event\Event;
 use Imi\Meter\Contract\IMeterRegistry;
+use Imi\RequestContext;
 
 /**
  * @Bean("MeterRegistry")
  */
 class MeterRegistry
 {
+    public const CONTEXT_KEY = self::class . '.driverInstance';
+
     protected string $driver = '';
 
     protected array $options = [];
 
-    private ?IMeterRegistry $driverInstance = null;
+    public function __construct()
+    {
+        Event::on('IMI.REQUEST_CONTENT.DESTROY', fn () => $this->onContextDestroy());
+    }
 
     public function getDriver(): string
     {
@@ -38,9 +45,22 @@ class MeterRegistry
                 throw new \InvalidArgumentException('Config @app.beans.MeterRegistry.driver cannot be empty');
             }
             // @phpstan-ignore-next-line
-            return $this->driverInstance = App::getBean($this->driver, $this->options);
+            /** @var IMeterRegistry $instance */
+            $instance = $this->driverInstance = App::newInstance($this->driver, $this->options);
+            RequestContext::set(self::CONTEXT_KEY, $instance);
+
+            return $instance;
         }
 
         return $this->driverInstance;
+    }
+
+    protected function onContextDestroy(): void
+    {
+        if ($instance = RequestContext::get(self::CONTEXT_KEY))
+        {
+            /** @var IMeterRegistry $instance */
+            $instance->close();
+        }
     }
 }
