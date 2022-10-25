@@ -47,8 +47,8 @@ class MeterRegistry
         {
             throw new \InvalidArgumentException('Config @app.beans.MeterRegistry.driver cannot be empty');
         }
-        // @phpstan-ignore-next-line
         /** @var IMeterRegistry $instance */
+        // @phpstan-ignore-next-line
         $instance = App::newInstance($this->driver, $this->options);
         RequestContext::set(self::CONTEXT_KEY, $instance);
 

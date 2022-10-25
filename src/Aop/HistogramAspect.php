@@ -54,6 +54,7 @@ class HistogramAspect
                 $value = preg_replace_callback('/\{([^\}]+)\}/', static fn (array $matches): string => (string) ObjectArrayHelper::get($context, $matches[1]), $value);
             }
         }
+        $options = MeterRegistry::getOptions();
         if (!Text::isEmpty($instanceTag = $options['instanceTag'] ?? 'instance') && !isset($labels[$instanceTag]))
         {
             $labels[$instanceTag] = $options['instance'] ?? 'imi';
