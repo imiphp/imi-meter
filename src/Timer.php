@@ -11,9 +11,13 @@ use Imi\Meter\Enum\MeterType;
 use Imi\Meter\Enum\TimeUnit;
 use Imi\Meter\Traits\TMeter;
 
-abstract class Timer implements ITimer
+class Timer implements ITimer
 {
     use TMeter;
+
+    protected float $value = 0;
+
+    protected int $count = 0;
 
     protected int $baseTimeUnit = TimeUnit::NANO_SECOND;
 
@@ -38,6 +42,29 @@ abstract class Timer implements ITimer
     public function getType(): string
     {
         return MeterType::TIMER;
+    }
+
+    public function record(int $nanoSecond, ?int $timeUnit = null): void
+    {
+        $this->value += $nanoSecond;
+        ++$this->count;
+    }
+
+    public function count(): int
+    {
+        return $this->count;
+    }
+
+    public function totalAmount(): float
+    {
+        return $this->value;
+    }
+
+    public function mean(): float
+    {
+        $count = $this->count();
+
+        return 0 === $count ? 0 : ($this->totalAmount() / $count);
     }
 
     /**
