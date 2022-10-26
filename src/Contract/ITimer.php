@@ -10,6 +10,12 @@ interface ITimer extends IMeter
 
     public function record(int $nanoSecond, ?int $timeUnit = null): void;
 
+    public function count(): int;
+
+    public function totalAmount(): float;
+
+    public function mean(): float;
+
     /**
      * @return mixed
      */
