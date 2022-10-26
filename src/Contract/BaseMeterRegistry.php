@@ -9,6 +9,9 @@ use Imi\Meter\Enum\TimeUnit;
 
 abstract class BaseMeterRegistry implements IMeterRegistry
 {
+    /**
+     * @var IMeter[]
+     */
     protected array $meters = [];
 
     protected array $config = [];
@@ -53,6 +56,9 @@ abstract class BaseMeterRegistry implements IMeterRegistry
         return $this->meters[$this->generateKey(static::SUMMARY_CLASS, $name, $tags)] ??= App::newInstance(static::SUMMARY_CLASS, $name, $tags, $description, $percentile, $options, $this);
     }
 
+    /**
+     * @return IMeter[]
+     */
     public function getMeters(): array
     {
         return array_merge($this->meters);
