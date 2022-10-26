@@ -36,7 +36,7 @@ class Histogram implements IHistogram
 
     public function record(float $value): void
     {
-        $this->value = $value;
+        $this->value = +$value;
         ++$this->count;
     }
 
