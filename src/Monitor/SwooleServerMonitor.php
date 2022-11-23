@@ -7,17 +7,18 @@ namespace Imi\Meter\Monitor;
 use Imi\Bean\Annotation\Bean;
 use Imi\Event\Event;
 use Imi\Meter\Facade\MeterRegistry;
-use Imi\Pool\PoolManager;
+use Imi\Server\ServerManager;
+use Imi\Swoole\Server\Contract\ISwooleServer;
 use Imi\Timer\Timer;
 use Imi\Util\ImiPriority;
 use Imi\Worker;
 
 /**
- * 连接池指标监控.
+ * Swoole 服务器指标监控.
  *
- * @Bean("PoolMonitor")
+ * @Bean("SwooleServerMonitor")
  */
-class PoolMonitor
+class SwooleServerMonitor
 {
     /**
      * 是否已启用.
@@ -25,28 +26,18 @@ class PoolMonitor
     protected bool $enable = false;
 
     /**
-     * 监控的连接池名称数组.
+     * 要监控的指标名称数组.
      *
-     * 如果为 null 则代表监控所有连接池
-     *
-     * @var string[]|null
+     * @see https://wiki.swoole.com/#/server/methods?id=stats
      */
-    protected ?array $pools = null;
+    protected array $stats = [];
 
     /**
      * 上报时间间隔，单位：秒.
      */
     protected float $interval = 10;
 
-    protected string $countKey = 'pool_count';
-
-    protected string $usedKey = 'pool_used';
-
-    protected string $freeKey = 'pool_free';
-
     protected string $workerIdTag = 'worker_id';
-
-    protected string $poolNameTag = 'pool_name';
 
     private ?int $timerId = null;
 
@@ -67,17 +58,32 @@ class PoolMonitor
     public function run(): void
     {
         $this->timerId = Timer::tick((int) ($this->interval * 1000), function () {
-            $driver = MeterRegistry::getDriverInstance();
-            $tags = [
-                $this->workerIdTag => Worker::getWorkerId(),
-            ];
-            foreach ($this->pools ?? PoolManager::getNames() as $poolName)
+            if ($this->stats)
             {
-                $pool = PoolManager::getInstance($poolName);
-                $tags[$this->poolNameTag] = $poolName;
-                $driver->gauge($this->countKey, $tags)->record($pool->getCount());
-                $driver->gauge($this->usedKey, $tags)->record($pool->getUsed());
-                $driver->gauge($this->freeKey, $tags)->record($pool->getFree());
+                /** @var ISwooleServer $server */
+                $server = ServerManager::getServer('main', ISwooleServer::class);
+                $swooleServer = $server->getSwooleServer();
+                $stats = $swooleServer->stats();
+                $driver = MeterRegistry::getDriverInstance();
+                $tags = [
+                    $this->workerIdTag => Worker::getWorkerId(),
+                ];
+                foreach ($this->stats as $key => $value)
+                {
+                    if (\is_string($key))
+                    {
+                        $statsName = $key;
+                        $meterName = $value;
+                    }
+                    else
+                    {
+                        $statsName = $meterName = $value;
+                    }
+                    if (isset($stats[$statsName]))
+                    {
+                        $driver->gauge($meterName, $tags)->record($stats[$statsName]);
+                    }
+                }
             }
         });
     }
@@ -99,11 +105,11 @@ class PoolMonitor
     }
 
     /**
-     * @return string[]|null
+     * Get 要监控的指标名称数组.
      */
-    public function getPools(): ?array
+    public function getStats(): array
     {
-        return $this->pools;
+        return $this->stats;
     }
 
     /**
